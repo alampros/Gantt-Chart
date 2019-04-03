@@ -205,7 +205,13 @@ d3.gantt = function() {
       var xAxisnode = chartnode.select("g.xaxis-group");
       xAxisnode.attr("transform", "translate(0, " + getChartHeight() + ")")
       timeAxisRenderer.draw(xAxisnode)
-      xAxisnode.selectAll(".tick").classed('minor',function(d) { return d.getMonth()})
+      xAxisnode.selectAll(".tick")
+		.classed('minor',
+			function(d) { 
+				//it seems that an error is thrown here, the debugs show's something inconsistent
+				//CozC
+				return d/*.getMonth()*/
+			});
     }
 
     var drawGrid = function(){
@@ -570,7 +576,9 @@ d3.timeAxisRenderer = function(){
   }
   /* Draws axis hanging on the svg node passed as parameter */
   timeAxisRenderer.draw  = function(node){
-    node.transition().call(xAxis).selectAll('text')
+    //disabled transition due to d3 error
+	//CozC
+	node./*transition().*/call(xAxis).selectAll('text')
       .attr('transform', function(d) {
         var xOffset = 3 + this.getBBox().width/2;
         var yOffset = 5 - this.getBBox().height;
@@ -605,7 +613,9 @@ d3.timeAxisRenderer = function(){
   timeAxisRenderer.tickFormat = function(value) {
     if (!arguments.length)
       return formatter;
-    formatter = value;
+	//due to the fact that value is string, and it the formater is used later.
+	//CozC
+    formatter = d3.time.format(value);;
     return timeAxisRenderer;
   };
 
